@@ -1,0 +1,34 @@
+{
+  "name": "noahback",
+  "version": "1.0.0",
+  "description": "Backend for Noah project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crazafimahatratra/noahback.git"
+  },
+  "author": "Christophe RAZAFIMAHATRATRA",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crazafimahatratra/noahback/issues"
+  },
+  "homepage": "https://github.com/crazafimahatratra/noahback#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "date-fns": "^2.14.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "mysql2": "^2.1.0",
+    "nodemon": "^2.0.4",
+    "sequelize": "^5.21.10",
+    "sequelize-cli": "^5.5.1",
+    "uuid": "^8.1.0"
+  }
+}
