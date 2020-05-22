@@ -1,5 +1,6 @@
 export interface Request {
-    body: object
+    body: object,
+    params: object,
 }
 
 export interface Response {

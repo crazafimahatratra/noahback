@@ -2,14 +2,14 @@ import db from '../models';
 import { sendError } from './ErrorHandler';
 import sequelize from 'sequelize';
 
-let Product = db.Product;
+let Operation = db.Operation;
 
 export const Errors = {
-    ERROR_CREATE_PRODUCT: {
-        status: 500, code: 'ERROR_CREATE_PRODUCT', message: 'Error while creating product'
+    ERROR_CREATE_OPERATION: {
+        status: 500, code: 'ERROR_CREATE_OPERATION', message: 'Error while creating operation'
     },
-    ERROR_PRODUCT_NOT_FOUND: {
-        status: 404, code: 'ERROR_PRODUCT_NOT_FOUND', message: 'Product not found',
+    ERROR_OPERATION_NOT_FOUND: {
+        status: 404, code: 'ERROR_OPERATION_NOT_FOUND', message: 'Operation not found',
     }
 }
 
@@ -20,9 +20,9 @@ export const Errors = {
  */
 export const findById = (id) => {
     return new Promise((resolve, reject) => {
-        Product.findOne({ where: { id: id } }).then(row => {
+        Operation.findOne({ where: { id: id }, include: ["product"] }).then(row => {
             if (row) resolve(row);
-            else reject(Errors.ERROR_PRODUCT_NOT_FOUND);
+            else reject(Errors.ERROR_OPERATION_NOT_FOUND);
         })
     })
 }
@@ -33,7 +33,7 @@ export const Controller = {
      * @param {import('./types').Response} res
      */
     all: (req, res) => {
-        Product.findAll().then(rows => res.json(rows));
+        Operation.findAll({ include: ["product"], order: ["date"] }).then(rows => res.json(rows));
     },
 
     /**
@@ -41,11 +41,13 @@ export const Controller = {
      * @param {import('./types').Response} res
      */
     create: (req, res) => {
-        Product.create(req.body).then(row => res.json(row))
-        .catch(err => {
-            console.log(err);
-            sendError(res, {status: 500, code: 'ERROR_CREATE_PRODUCT', message: 'Error while creating product'});
-        })
+        Operation.create(req.body, { include: ["product"] })
+            .then(row => findById(row.id))
+            .then(row => res.json(row))
+            .catch(err => {
+                console.log(err);
+                sendError(res, Errors.ERROR_CREATE_OPERATION);
+            })
     },
 
     /**
@@ -55,7 +57,7 @@ export const Controller = {
     delete: (req, res) => {
         findById(req.params.id)
             .then(row => { return row.destroy() })
-            .then(() => res.json({ message: "Product deleted" }))
+            .then(() => res.json({ message: "Operation deleted" }))
             .catch(err => sendError(res, err));
     }
 };
