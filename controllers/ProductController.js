@@ -42,10 +42,10 @@ export const Controller = {
      */
     create: (req, res) => {
         Product.create(req.body).then(row => res.json(row))
-        .catch(err => {
-            console.log(err);
-            sendError(res, {status: 500, code: 'ERROR_CREATE_PRODUCT', message: 'Error while creating product'});
-        })
+            .catch(err => {
+                console.log(err);
+                sendError(res, { status: 500, code: 'ERROR_CREATE_PRODUCT', message: 'Error while creating product' });
+            })
     },
 
     /**
@@ -57,5 +57,16 @@ export const Controller = {
             .then(row => { return row.destroy() })
             .then(() => res.json({ message: "Product deleted" }))
             .catch(err => sendError(res, err));
-    }
+    },
+
+    /**
+     * @param {import('./types').Request} req
+     * @param {import('./types').Response} res
+     */
+    update: (req, res) => {
+        findById(req.params.id)
+            .then(row => { return row.update(req.body) })
+            .then(updated => res.json(updated))
+            .catch(err => sendError(res, err));
+    },
 };
