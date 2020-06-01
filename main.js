@@ -5,6 +5,7 @@ import logger from './logger';
 import usersRouter from './routes/users';
 import productsRouter from './routes/products';
 import operationsRouter from './routes/operations';
+import categoriesRouter from './routes/categories';
 
 let app = express();
 app.use(cors());
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 
 app.use(usersRouter);
 app.use(productsRouter);
+app.use(categoriesRouter);
 app.use(operationsRouter);
 
 const server = app.listen(7000, () => {
