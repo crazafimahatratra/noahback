@@ -1,8 +1,9 @@
 import db from '../models';
 import { sendError } from './ErrorHandler';
-import sequelize from 'sequelize';
+import sequelize, { Sequelize } from 'sequelize';
 
 let Operation = db.Operation;
+const Op = sequelize.Op;
 
 export const Errors = {
     ERROR_CREATE_OPERATION: {
@@ -74,5 +75,19 @@ export const Controller = {
             .then(row => { return row.destroy() })
             .then(() => res.json({ message: "Operation deleted" }))
             .catch(err => sendError(res, err));
+    },
+
+    /**
+     * @param {import('./types').Request} req
+     * @param {import('./types').Response} res
+     */
+    search: (req, res) => {
+        let pattern = Buffer.from(req.params.pattern, 'base64').toString();
+        Operation.findAll({where: {label: {[Op.like]: `%${pattern}%`}}, include: ["category"]}).then(values => {
+            res.json(values);
+        }).catch(err => {
+            console.error(err);
+            res.status(500).json("Error");
+        })
     }
 };
